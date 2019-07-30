@@ -12,7 +12,7 @@ namespace OnePlusOne
         {
             Logger.Clear();
             Logger.IsEnabled = false;
-            int trainNums = 100;//训练次数
+            int trainNums = 1000;//训练次数
             int maxStep = 120;//单次训练允许的最大回合,一般1000次训练中单词最大回合数小于100
             for (int trainIndex = 0; trainIndex < trainNums; trainIndex++)
             {
@@ -105,8 +105,8 @@ namespace OnePlusOne
         static void Main(string[] args)
 #pragma warning restore IDE0060 // 删除未使用的参数
         {
-            Train();
             LoadTrainData();
+            Train();
         }
 
     }
