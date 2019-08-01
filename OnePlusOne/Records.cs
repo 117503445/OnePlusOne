@@ -13,7 +13,7 @@ namespace OnePlusOne
     }
     public class Records
     {
-        private readonly List<Record> rs = new List<Record>();
+        public readonly List<Record> rs = new List<Record>();
         public override string ToString()
         {
             string s = "";

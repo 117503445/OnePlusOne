@@ -4,15 +4,28 @@ using System.IO;
 
 namespace OnePlusOne
 {
-    class Program
+    partial class Program
     {
         private static Records records = new Records();
-
-        private static void Train()
+        /// <summary>
+        /// 计时
+        /// </summary>
+        /// <param name="action"></param>
+        private static void Timing(Action action)
+        {
+            var beginTime = DateTime.Now;
+            action();
+            var endTime = DateTime.Now;
+            Console.WriteLine($"Start at {beginTime}\nEnd at   {endTime}\n{(endTime - beginTime).TotalMilliseconds}ms");
+        }
+        /// <summary>
+        /// 由1个 RandomPlayer 进行多次自我随机对弈训练
+        /// </summary>
+        private static void RandomTrain()
         {
             Logger.Clear();
             Logger.IsEnabled = false;
-            int trainNums = 1000;//训练次数
+            int trainNums = 10000;//训练次数
             int maxStep = 120;//单次训练允许的最大回合,一般1000次训练中单词最大回合数小于100
             for (int trainIndex = 0; trainIndex < trainNums; trainIndex++)
             {
@@ -39,7 +52,7 @@ namespace OnePlusOne
                         cases.Add(c.ToString());
                         int method = player.GetAddMethod(c.Nums);
                         Logger.WriteLine(method);
-                        c.Add(method);
+                        c.RunMethod(method);
                         methods.Add(method);
                         Logger.WriteLine(c);
                         c.Reserve();
@@ -94,19 +107,60 @@ namespace OnePlusOne
 
         }
 
-        private static void LoadTrainData()
+        private static void LoadTrainData(string path = "data.txt")
         {
-            string path = "data.txt";
             string s = File.ReadAllText(path);
             records = Records.LoadFromText(s);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        private static void Play()
+        {
+            GCase gCase = new GCase();
+
+            AIPLayer aIPLayer = new AIPLayer(Records.LoadFromText(File.ReadAllText(("randomData.txt"))));
+            HumanPlayer humanPlayer = new HumanPlayer();
+
+            for (int i = 0; i < 100; i++)
+            {
+                int method;
+                if (i % 2 == 0)
+                {
+                    Console.WriteLine("--- humanPlayer ---");
+                    method = humanPlayer.GetAddMethod(gCase.Nums);
+                    Console.WriteLine("--- end ---");
+                    Console.WriteLine();
+                }
+                else
+                {
+                    Console.WriteLine("--- AIPLayer ---");
+                    method = aIPLayer.GetAddMethod(gCase.Nums);
+                    Console.WriteLine("--- end ---");
+                    Console.WriteLine();
+                }
+                gCase.RunMethod(method);
+                gCase.Reserve();
+            }
+
+            //RandomPlayer randomPlayer = new RandomPlayer();
+
         }
 
 #pragma warning disable IDE0060 // 删除未使用的参数
         static void Main(string[] args)
 #pragma warning restore IDE0060 // 删除未使用的参数
         {
-            LoadTrainData();
-            Train();
+            try
+            {
+                LoadTrainData();
+            }
+            catch (Exception)
+            {
+            }
+
+            Play();
+            //Timing(RandomTrain);
         }
 
     }

@@ -24,10 +24,10 @@ namespace OnePlusOne
             }
         }
         /// <summary>
-        /// 
+        /// 执行加法
         /// </summary>
         /// <param name="method">0:2加到0 1:2加到1 2:3加到0 3:3加到1</param>
-        public void Add(int method)
+        public void RunMethod(int method)
         {
             if (!IsVaildAddMethod(Nums, method))
             {
