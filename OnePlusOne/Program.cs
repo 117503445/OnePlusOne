@@ -8,7 +8,6 @@ namespace OnePlusOne
 
     partial class Program
     {
-        private static Records records = new Records();
         /// <summary>
         /// 计时
         /// </summary>
@@ -18,20 +17,35 @@ namespace OnePlusOne
             var beginTime = DateTime.Now;
             action();
             var endTime = DateTime.Now;
+            Console.WriteLine();
             Console.WriteLine($"Start at {beginTime}\nEnd at   {endTime}\n{(endTime - beginTime).TotalMilliseconds}ms");
+            Console.WriteLine();
         }
         /// <summary>
         /// 由1个 RandomPlayer 进行多次自我随机对弈训练
         /// </summary>
         private static void RandomTrain()
         {
+            Records records;
+            string path = "data.txt";
+            if (File.Exists(path))
+            {
+
+                records = Records.LoadFromText(File.ReadAllText("data.txt"));
+            }
+            else
+            {
+                records = new Records();
+            }
             Logger.Clear();
             Logger.IsEnabled = false;
             int trainNums = 50000;//训练次数
             int maxStep = 120;//单次训练允许的最大回合,一般1000次训练中单词最大回合数小于100
+            Console.CursorVisible = false;
             for (int trainIndex = 0; trainIndex < trainNums; trainIndex++)
             {
-                Console.WriteLine($"{trainIndex}/{trainNums}");
+                Console.SetCursorPosition(0, Console.CursorTop);
+                Console.Write($"{trainIndex + 1}/{trainNums}");
 
                 GCase c = new GCase();
                 RandomPlayer player = new RandomPlayer();
@@ -101,18 +115,11 @@ namespace OnePlusOne
                 }
                 Logger.WriteLine();
             }
+            Console.CursorVisible = true;
             Logger.IsEnabled = true;
 
             Logger.Clear("data.txt");
             Logger.WriteLine(records, "data.txt");
-            //Console.WriteLine(records);
-
-        }
-
-        private static void LoadTrainData(string path = "data.txt")
-        {
-            string s = File.ReadAllText(path);
-            records = Records.LoadFromText(s);
         }
         /// <summary>
         /// HumanPlayer 与 AIPLayer 进行博弈
@@ -122,7 +129,7 @@ namespace OnePlusOne
             AIPLayer aIPLayer = new AIPLayer(Records.LoadFromText(File.ReadAllText(("data.txt"))));
             HumanPlayer humanPlayer = new HumanPlayer();
 
-            Game game = new Game(new Player[] { aIPLayer, humanPlayer });
+            Game game = new Game(new Player[] { humanPlayer, aIPLayer });
             game.Start();
         }
 
@@ -132,7 +139,7 @@ namespace OnePlusOne
         {
             try
             {
-                LoadTrainData();
+                HumanVsAI();
             }
             catch (Exception)
             {
@@ -140,11 +147,9 @@ namespace OnePlusOne
                 Console.WriteLine("Press Enter to train");
                 Console.ReadLine();
                 Timing(RandomTrain);
-                Console.Clear();
+                Console.WriteLine();
+                HumanVsAI();
             }
-
-            HumanVsAI();
-
         }
 
     }
