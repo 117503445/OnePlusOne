@@ -8,6 +8,28 @@ namespace OnePlusOne
     public class Game
     {
         /// <summary>
+        /// 是否启用游戏日志
+        /// </summary>
+        public bool IsEnabledGameLog { get; set; } = true;
+        /// <summary>
+        /// 输出游戏日志
+        /// </summary>
+        /// <param name="o"></param>
+        private void GameLog(object o = null)
+        {
+            if (IsEnabledGameLog)
+            {
+                if (o == null)
+                {
+                    Console.WriteLine();
+                }
+                else
+                {
+                    Console.WriteLine(o);
+                }
+            }
+        }
+        /// <summary>
         /// 当前的局面
         /// </summary>
         private readonly GCase GCase = new GCase();
@@ -41,38 +63,38 @@ namespace OnePlusOne
                 {
                     if (i % 2 == 0)
                     {
-                        Console.WriteLine("Player1 Win");
+                        GameLog("Player1 Win");
                     }
                     else
                     {
-                        Console.WriteLine("Player0 Win");
+                        GameLog("Player0 Win");
                     }
                     break;
                 }
                 int method;
                 if (i % 2 == 0)
                 {
-                    Console.WriteLine("--- Player0 ---");
+                    GameLog("--- Player0 ---");
                     method = Players[0].GetAddMethod(GCase.Nums);
-                    Console.WriteLine("--- end ---");
-                    Console.WriteLine();
+                    GameLog("--- end ---");
+                    GameLog();
                 }
                 else
                 {
-                    Console.WriteLine("--- PLayer1 ---");
+                    GameLog("--- PLayer1 ---");
                     method = Players[1].GetAddMethod(GCase.Nums);
-                    Console.WriteLine("--- end ---");
-                    Console.WriteLine();
+                    GameLog("--- end ---");
+                    GameLog();
                 }
-                Console.WriteLine("------");
-                Console.WriteLine(GCase);
-                Console.WriteLine(method);
+                GameLog("------");
+                GameLog(GCase);
+                GameLog(method);
                 GCase.RunMethod(method);
-                Console.WriteLine(GCase);
+                GameLog(GCase);
                 GCase.Reserve();
-                Console.WriteLine(GCase);
-                Console.WriteLine("------");
-                Console.WriteLine();
+                GameLog(GCase);
+                GameLog("------");
+                GameLog();
             }
         }
     }

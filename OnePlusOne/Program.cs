@@ -7,14 +7,23 @@ namespace OnePlusOne
     partial class Program
     {
         /// <summary>
+        /// 由 AIPlayer 和 RandomPlayer 进行多次自我随机对弈训练
+        /// </summary>
+        private static void AITrain()
+        {
+
+        }
+
+        /// <summary>
         /// 由1个 RandomPlayer 进行多次自我随机对弈训练
         /// </summary>
-        private static void RandomTrain(string path = "randomData.txt")
+        /// <param name="path">训练数据路径</param>
+        /// <param name="trainNums">训练次数</param>
+        private static void RandomTrain(string path = "randomData.txt", int trainNums = 50000)
         {
             Records records;
             if (File.Exists(path))
             {
-
                 records = Records.LoadFromText(File.ReadAllText(path));
             }
             else
@@ -23,7 +32,7 @@ namespace OnePlusOne
             }
             Logger.Clear();
             Logger.IsEnabled = false;
-            int trainNums = 50000;//训练次数
+            
             int maxStep = 120;//单次训练允许的最大回合,一般1000次训练中单词最大回合数小于100
             Console.CursorVisible = false;
             for (int trainIndex = 0; trainIndex < trainNums; trainIndex++)
