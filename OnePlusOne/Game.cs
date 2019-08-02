@@ -64,8 +64,15 @@ namespace OnePlusOne
                     Console.WriteLine("--- end ---");
                     Console.WriteLine();
                 }
+                Console.WriteLine("------");
+                Console.WriteLine(GCase);
+                Console.WriteLine(method);
                 GCase.RunMethod(method);
+                Console.WriteLine(GCase);
                 GCase.Reserve();
+                Console.WriteLine(GCase);
+                Console.WriteLine("------");
+                Console.WriteLine();
             }
         }
     }
