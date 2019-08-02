@@ -4,34 +4,18 @@ using System.IO;
 
 namespace OnePlusOne
 {
-
-
     partial class Program
     {
         /// <summary>
-        /// 计时
-        /// </summary>
-        /// <param name="action"></param>
-        private static void Timing(Action action)
-        {
-            var beginTime = DateTime.Now;
-            action();
-            var endTime = DateTime.Now;
-            Console.WriteLine();
-            Console.WriteLine($"Start at {beginTime}\nEnd at   {endTime}\n{(endTime - beginTime).TotalMilliseconds}ms");
-            Console.WriteLine();
-        }
-        /// <summary>
         /// 由1个 RandomPlayer 进行多次自我随机对弈训练
         /// </summary>
-        private static void RandomTrain()
+        private static void RandomTrain(string path = "randomData.txt")
         {
             Records records;
-            string path = "data.txt";
             if (File.Exists(path))
             {
 
-                records = Records.LoadFromText(File.ReadAllText("data.txt"));
+                records = Records.LoadFromText(File.ReadAllText(path));
             }
             else
             {
@@ -118,15 +102,15 @@ namespace OnePlusOne
             Console.CursorVisible = true;
             Logger.IsEnabled = true;
 
-            Logger.Clear("data.txt");
-            Logger.WriteLine(records, "data.txt");
+
+            Logger.WriteLine(records, path);
         }
         /// <summary>
         /// HumanPlayer 与 AIPLayer 进行博弈
         /// </summary>
-        private static void HumanVsAI()
+        private static void HumanVsAI(string path = "data.txt")
         {
-            AIPLayer aIPLayer = new AIPLayer(Records.LoadFromText(File.ReadAllText(("data.txt"))));
+            AIPLayer aIPLayer = new AIPLayer(Records.LoadFromText(File.ReadAllText((path))));
             HumanPlayer humanPlayer = new HumanPlayer();
 
             Game game = new Game(new Player[] { humanPlayer, aIPLayer });
@@ -144,9 +128,16 @@ namespace OnePlusOne
             catch (Exception)
             {
                 Console.WriteLine("LoadTrainData failed");
-                Console.WriteLine("Press Enter to train");
+                Console.WriteLine("Press Enter to random train and ai train");
                 Console.ReadLine();
-                Timing(RandomTrain);
+
+                var beginTime = DateTime.Now;
+                RandomTrain();
+                var endTime = DateTime.Now;
+                Console.WriteLine();
+                Console.WriteLine($"Start at {beginTime}\nEnd at   {endTime}\n{(endTime - beginTime).TotalMilliseconds}ms");
+                Console.WriteLine();
+
                 Console.WriteLine();
                 HumanVsAI();
             }
