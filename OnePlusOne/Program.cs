@@ -4,6 +4,8 @@ using System.IO;
 
 namespace OnePlusOne
 {
+
+
     partial class Program
     {
         private static Records records = new Records();
@@ -25,7 +27,7 @@ namespace OnePlusOne
         {
             Logger.Clear();
             Logger.IsEnabled = false;
-            int trainNums = 10000;//训练次数
+            int trainNums = 50000;//训练次数
             int maxStep = 120;//单次训练允许的最大回合,一般1000次训练中单词最大回合数小于100
             for (int trainIndex = 0; trainIndex < trainNums; trainIndex++)
             {
@@ -113,38 +115,15 @@ namespace OnePlusOne
             records = Records.LoadFromText(s);
         }
         /// <summary>
-        /// 
+        /// HumanPlayer 与 AIPLayer 进行博弈
         /// </summary>
-        private static void Play()
+        private static void HumanVsAI()
         {
-            GCase gCase = new GCase();
-
-            AIPLayer aIPLayer = new AIPLayer(Records.LoadFromText(File.ReadAllText(("randomData.txt"))));
+            AIPLayer aIPLayer = new AIPLayer(Records.LoadFromText(File.ReadAllText(("data.txt"))));
             HumanPlayer humanPlayer = new HumanPlayer();
 
-            for (int i = 0; i < 100; i++)
-            {
-                int method;
-                if (i % 2 == 0)
-                {
-                    Console.WriteLine("--- humanPlayer ---");
-                    method = humanPlayer.GetAddMethod(gCase.Nums);
-                    Console.WriteLine("--- end ---");
-                    Console.WriteLine();
-                }
-                else
-                {
-                    Console.WriteLine("--- AIPLayer ---");
-                    method = aIPLayer.GetAddMethod(gCase.Nums);
-                    Console.WriteLine("--- end ---");
-                    Console.WriteLine();
-                }
-                gCase.RunMethod(method);
-                gCase.Reserve();
-            }
-
-            //RandomPlayer randomPlayer = new RandomPlayer();
-
+            Game game = new Game(new Player[] { aIPLayer, humanPlayer });
+            game.Start();
         }
 
 #pragma warning disable IDE0060 // 删除未使用的参数
@@ -157,10 +136,15 @@ namespace OnePlusOne
             }
             catch (Exception)
             {
+                Console.WriteLine("LoadTrainData failed");
+                Console.WriteLine("Press Enter to train");
+                Console.ReadLine();
+                Timing(RandomTrain);
+                Console.Clear();
             }
 
-            Play();
-            //Timing(RandomTrain);
+            HumanVsAI();
+
         }
 
     }

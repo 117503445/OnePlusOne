@@ -31,11 +31,8 @@ namespace OnePlusOne
                 {
                     if (record.GCase == gcase)
                     {
-                        Console.WriteLine(record.ToString());
-
-
+                        Console.WriteLine($"case={record}");
                         double maxWinPercentage = 0;//4种方法中的最大胜率
-
                         for (int i = 0; i < 4; i++)
                         {
                             int sum = 0;
