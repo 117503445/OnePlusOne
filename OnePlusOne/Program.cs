@@ -132,7 +132,7 @@ namespace OnePlusOne
         {
             try
             {
-                HumanVsAI();
+                HumanVsAI("randomData.txt");
             }
             catch (Exception)
             {
@@ -148,7 +148,7 @@ namespace OnePlusOne
                 Console.WriteLine();
 
                 Console.WriteLine();
-                HumanVsAI();
+                HumanVsAI("randomData.txt");
             }
         }
 

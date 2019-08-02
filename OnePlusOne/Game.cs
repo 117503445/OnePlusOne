@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace OnePlusOne
 {
@@ -7,6 +8,7 @@ namespace OnePlusOne
     /// </summary>
     public class Game
     {
+        public List<KeyValuePair<string, int>> CaseMothodPairs { get; set; } = new List<KeyValuePair<string, int>>();
         /// <summary>
         /// 是否启用游戏日志
         /// </summary>
