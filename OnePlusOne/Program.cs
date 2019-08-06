@@ -6,12 +6,73 @@ namespace OnePlusOne
 {
     partial class Program
     {
+
+        /// <summary>
+        /// 对 Player 进行胜率测试,用 RandomPlayer 与之对战 n 次
+        /// </summary>
+        private static void PlayerTest(Player player, int n = 10000)
+        {
+            RandomPlayer randomPlayer = new RandomPlayer();
+            Game game = new Game(new Player[] { randomPlayer, player })
+            {
+                IsEnabledGameLog = false
+            };
+            int a = 0, b = 0;
+            Console.WriteLine();
+            Console.WriteLine("-----");
+            Console.WriteLine("Player Testing");
+            Console.CursorVisible = false;
+            for (int i = 0; i < n; i++)
+            {
+                Console.SetCursorPosition(0, Console.CursorTop);
+                Console.Write($"{i + 1}/{n}");
+                game.Start();
+                if (game.GState == GState.AWin)
+                {
+                    a++;
+                }
+                else if (game.GState == GState.BWin)
+                {
+                    b++;
+                }
+            }
+            Console.CursorVisible = true;
+
+            Console.WriteLine();
+            Console.WriteLine($"in {n} times, player win {b} times, randomPlayer win {a} times, {(double)b / (a + b) * 100}%");
+            Console.WriteLine("-----");
+        }
+
         /// <summary>
         /// 由 AIPlayer 和 RandomPlayer 进行多次自我随机对弈训练
         /// </summary>
-        private static void AITrain()
+        private static void AITrain(string loadPath = "randomData.txt", string savePath = "AiData.txt")
         {
+            AIPLayer aIPLayer = new AIPLayer(loadPath);
+            RandomPlayer randomPlayer = new RandomPlayer();
 
+            Game game = new Game(new Player[] { aIPLayer, randomPlayer });
+            if (true)
+            {
+                aIPLayer.IsEnabledGameLog = false;
+                game.IsEnabledGameLog = false;
+            }
+            int a = 0, b = 0;
+            for (int i = 0; i < 10000; i++)
+            {
+                Console.WriteLine(i);
+                game.Start();
+                if (game.GState == GState.AWin)
+                {
+                    a++;
+                }
+                else if (game.GState == GState.BWin)
+                {
+                    b++;
+                }
+            }
+            Console.WriteLine(a);
+            Console.WriteLine(b);
         }
 
         /// <summary>
@@ -19,7 +80,7 @@ namespace OnePlusOne
         /// </summary>
         /// <param name="path">训练数据路径</param>
         /// <param name="trainNums">训练次数</param>
-        private static void RandomTrain(string path = "randomData.txt", int trainNums = 50000)
+        private static void RandomTrain(string path = "randomData.txt", int trainNums = 20000)
         {
             Records records;
             if (File.Exists(path))
@@ -32,7 +93,7 @@ namespace OnePlusOne
             }
             Logger.Clear();
             Logger.IsEnabled = false;
-            
+
             int maxStep = 120;//单次训练允许的最大回合,一般1000次训练中单词最大回合数小于100
             Console.CursorVisible = false;
             for (int trainIndex = 0; trainIndex < trainNums; trainIndex++)
@@ -114,6 +175,20 @@ namespace OnePlusOne
 
             Logger.WriteLine(records, path);
         }
+
+        private static void RandomTrainTiming()
+        {
+
+
+            var beginTime = DateTime.Now;
+            RandomTrain();
+            var endTime = DateTime.Now;
+            Console.WriteLine();
+            Console.WriteLine($"Start at {beginTime}\nEnd at   {endTime}\n{(endTime - beginTime).TotalMilliseconds}ms");
+            Console.WriteLine();
+
+            Console.WriteLine();
+        }
         /// <summary>
         /// HumanPlayer 与 AIPLayer 进行博弈
         /// </summary>
@@ -127,9 +202,16 @@ namespace OnePlusOne
         }
 
 #pragma warning disable IDE0060 // 删除未使用的参数
-        static void Main(string[] args)
+        private static void Main(string[] args)
 #pragma warning restore IDE0060 // 删除未使用的参数
         {
+            RandomTrainTiming();
+            return;
+            //AITrain();
+            AIPLayer aIPLayer = new AIPLayer("randomData.txt");
+            aIPLayer.IsEnabledGameLog = false;
+            PlayerTest(aIPLayer);
+            return;
             try
             {
                 HumanVsAI("randomData.txt");
@@ -139,15 +221,7 @@ namespace OnePlusOne
                 Console.WriteLine("LoadTrainData failed");
                 Console.WriteLine("Press Enter to random train and ai train");
                 Console.ReadLine();
-
-                var beginTime = DateTime.Now;
-                RandomTrain();
-                var endTime = DateTime.Now;
-                Console.WriteLine();
-                Console.WriteLine($"Start at {beginTime}\nEnd at   {endTime}\n{(endTime - beginTime).TotalMilliseconds}ms");
-                Console.WriteLine();
-
-                Console.WriteLine();
+                RandomTrainTiming();
                 HumanVsAI("randomData.txt");
             }
         }

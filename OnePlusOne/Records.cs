@@ -27,6 +27,12 @@ namespace OnePlusOne
         {
             rs.Sort(new RecordComparer());
         }
+        /// <summary>
+        /// 增加一次
+        /// </summary>
+        /// <param name="gcase"></param>
+        /// <param name="addMethod"></param>
+        /// <param name="result"></param>
         public void Add(string gcase, int addMethod, CaseResult result)
         {
             if (gcase.Length != 4)
@@ -57,10 +63,19 @@ namespace OnePlusOne
                 Sort();
             }
         }
+        /// <summary>
+        /// 插入1条记录
+        /// </summary>
+        /// <param name="record"></param>
         public void Insert(Record record)
         {
             rs.Add(record);
         }
+        /// <summary>
+        /// 从序列化的字符串中加载
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
         public static Records LoadFromText(string s)
         {
             Records records = new Records();

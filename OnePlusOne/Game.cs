@@ -8,11 +8,21 @@ namespace OnePlusOne
     /// </summary>
     public class Game
     {
+        /// <summary>
+        /// 游戏状态
+        /// </summary>
+        public GState GState
+        {
+            get; private set;
+        } = GState.Playing;
+
         public List<KeyValuePair<string, int>> CaseMothodPairs { get; set; } = new List<KeyValuePair<string, int>>();
         /// <summary>
         /// 是否启用游戏日志
         /// </summary>
         public bool IsEnabledGameLog { get; set; } = true;
+        private bool IsTrainMode { get { return Records != null; } }
+        private Records Records;
         /// <summary>
         /// 输出游戏日志
         /// </summary>
@@ -34,7 +44,7 @@ namespace OnePlusOne
         /// <summary>
         /// 当前的局面
         /// </summary>
-        private readonly GCase GCase = new GCase();
+        private GCase GCase;
         /// <summary>
         /// 2个玩家
         /// </summary>
@@ -56,25 +66,40 @@ namespace OnePlusOne
             }
             this.maxStep = maxStep;
         }
-
+        /// <summary>
+        /// 加载训练数据集,关闭日志输出
+        /// </summary>
+        /// <param name="records"></param>
+        public void LoadTrainRecords(Records records)
+        {
+            Records = records;
+            IsEnabledGameLog = false;
+        }
+        /// <summary>
+        /// 开始游戏
+        /// </summary>
         public void Start()
         {
-            for (int i = 0; i < maxStep; i++)
+            GCase = new GCase();
+            for (int step = 0; step < maxStep; step++)
             {
                 if (GCase.GState != GState.Playing)
                 {
-                    if (i % 2 == 0)
+                    if (step % 2 == 0)
                     {
+                        GState = GState.BWin;
                         GameLog("Player1 Win");
                     }
                     else
                     {
+                        GState = GState.AWin;
+
                         GameLog("Player0 Win");
                     }
                     break;
                 }
                 int method;
-                if (i % 2 == 0)
+                if (step % 2 == 0)
                 {
                     GameLog("--- Player0 ---");
                     method = Players[0].GetAddMethod(GCase.Nums);

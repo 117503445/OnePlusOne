@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace OnePlusOne
 {
@@ -9,10 +10,39 @@ namespace OnePlusOne
             private static readonly Random random = new Random();
 
             public Records Records;
-
+            /// <summary>
+            /// 是否启用游戏日志
+            /// </summary>
+            public bool IsEnabledGameLog { get; set; } = true;
+            /// <summary>
+            /// 输出游戏日志
+            /// </summary>
+            /// <param name="o"></param>
+            private void GameLog(object o = null)
+            {
+                if (IsEnabledGameLog)
+                {
+                    if (o == null)
+                    {
+                        Console.WriteLine();
+                    }
+                    else
+                    {
+                        Console.WriteLine(o);
+                    }
+                }
+            }
             public AIPLayer(Records records)
             {
                 Records = records ?? throw new ArgumentNullException(nameof(records));
+            }
+            /// <summary>
+            /// 从指定路径读取文本文件,反序列化
+            /// </summary>
+            /// <param name="path"></param>
+            public AIPLayer(string path)
+            {
+                Records = Records.LoadFromText(File.ReadAllText((path)));
             }
 
             public override int GetAddMethod(int[] nums)
@@ -31,7 +61,7 @@ namespace OnePlusOne
                 {
                     if (record.GCase == gcase)
                     {
-                        Console.WriteLine($"case={record}");
+                        GameLog($"case={record}");
                         double maxWinPercentage = 0;//4种方法中的最大胜率
                         for (int i = 0; i < 4; i++)
                         {
@@ -43,7 +73,7 @@ namespace OnePlusOne
                             if (sum != 0)
                             {
                                 double winPercentage =(double) record.Nums[i * 3] / sum;
-                                Console.WriteLine($"method{i} {winPercentage}");
+                                GameLog($"method{i} {winPercentage}");
                                 if (winPercentage > maxWinPercentage)
                                 {
                                     maxWinPercentage = winPercentage;
@@ -53,7 +83,7 @@ namespace OnePlusOne
                         }
                     }
                 }
-                Console.WriteLine(method);
+                GameLog(method);
                 if (method != -1)
                 {
                     return method;
