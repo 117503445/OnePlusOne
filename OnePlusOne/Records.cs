@@ -5,12 +5,6 @@ using System.Text;
 
 namespace OnePlusOne
 {
-    public enum CaseResult
-    {
-        Win,
-        Fail,
-        Loop
-    }
     public class Records
     {
         public readonly List<Record> rs = new List<Record>();

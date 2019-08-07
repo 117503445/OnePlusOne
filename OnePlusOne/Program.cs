@@ -175,15 +175,16 @@ namespace OnePlusOne
 
             Logger.WriteLine(records, path);
         }
-
+        /// <summary>
+        /// 进行 RandomTrain 的同时进行记时
+        /// </summary>
         private static void RandomTrainTiming()
         {
-
-
             var beginTime = DateTime.Now;
             RandomTrain();
             var endTime = DateTime.Now;
             Console.WriteLine();
+
             Console.WriteLine($"Start at {beginTime}\nEnd at   {endTime}\n{(endTime - beginTime).TotalMilliseconds}ms");
             Console.WriteLine();
 
