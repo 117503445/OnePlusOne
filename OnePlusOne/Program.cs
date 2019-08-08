@@ -216,11 +216,11 @@ namespace OnePlusOne
             AIPLayer aiPlayer = new AIPLayer(new Records());
             aiPlayer.IsEnabledGameLog = false;
             RandomPlayer randomPlayer = new RandomPlayer();
-            Game game = new Game(new Player[] { randomPlayer, randomPlayer });
+            Game game = new Game(new Player[] { aiPlayer, randomPlayer });
             game.LoadTrainRecords(aiPlayer.Records);
             game.IsEnabledGameLog = false;
 
-            for (int i = 0; i < 2000; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 //Console.WriteLine(i);
                 if (i % 1000 == 0)
@@ -229,18 +229,19 @@ namespace OnePlusOne
                 }
                 game.Start();
             }
-            game = new Game(new Player[] { randomPlayer, aiPlayer });
-            game.LoadTrainRecords(aiPlayer.Records);
-            game.IsEnabledGameLog = false;
-            for (int i = 0; i < 1; i++)
-            {
-                //Console.WriteLine(i);
-                if (i % 1000 == 0)
-                {
-                    Console.WriteLine(i);
-                }
-                game.Start();
-            }
+            File.WriteAllText("ai.txt", aiPlayer.Records.ToString());
+            //game = new Game(new Player[] { randomPlayer, aiPlayer });
+            //game.LoadTrainRecords(aiPlayer.Records);
+            //game.IsEnabledGameLog = false;
+            //for (int i = 0; i < 1; i++)
+            //{
+            //    //Console.WriteLine(i);
+            //    if (i % 1000 == 0)
+            //    {
+            //        Console.WriteLine(i);
+            //    }
+            //    game.Start();
+            //}
 
             PlayerTest(aiPlayer, 10000);
             return;
