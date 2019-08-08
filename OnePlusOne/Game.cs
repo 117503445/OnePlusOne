@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace OnePlusOne
 {
@@ -16,13 +17,12 @@ namespace OnePlusOne
             get; private set;
         } = GState.Playing;
 
-        public List<KeyValuePair<string, int>> CaseMothodPairs { get; set; } = new List<KeyValuePair<string, int>>();
         /// <summary>
         /// 是否启用游戏日志
         /// </summary>
         public bool IsEnabledGameLog { get; set; } = true;
         private bool IsTrainMode { get { return Records != null; } }
-        private Records Records;
+        public Records Records;
         /// <summary>
         /// 输出游戏日志
         /// </summary>
@@ -50,7 +50,7 @@ namespace OnePlusOne
         /// </summary>
         private readonly Player[] Players;
         private readonly int maxStep;
-        public Game(Player[] players, int maxStep = 1000)
+        public Game(Player[] players, int maxStep = 120)
         {
             Players = players ?? throw new ArgumentNullException(nameof(players));
             if (players.Length != 2)
@@ -81,6 +81,10 @@ namespace OnePlusOne
         public void Start()
         {
             GCase = new GCase();
+
+            List<string> cases = new List<string>();
+            List<int> methods = new List<int>();
+
             for (int step = 0; step < maxStep; step++)
             {
                 if (GCase.GState != GState.Playing)
@@ -93,7 +97,6 @@ namespace OnePlusOne
                     else
                     {
                         GState = GState.AWin;
-
                         GameLog("Player0 Win");
                     }
                     break;
@@ -113,6 +116,13 @@ namespace OnePlusOne
                     GameLog("--- end ---");
                     GameLog();
                 }
+
+                if (IsTrainMode)
+                {
+                    cases.Add(GCase.ToString());
+                    methods.Add(method);
+                }
+
                 GameLog("------");
                 GameLog(GCase);
                 GameLog(method);
@@ -122,6 +132,38 @@ namespace OnePlusOne
                 GameLog(GCase);
                 GameLog("------");
                 GameLog();
+            }
+            if (IsTrainMode)
+            {
+                for (int i = cases.Count - 1; i >= 0; i--)//倒序
+                {
+                    var state = GCase.GState;
+                    string gcase = cases[i];
+                    int method = methods[i];
+                    switch (state)
+                    {
+                        case GState.Playing:
+                            Records.Add(gcase, method, CaseResult.Loop);
+                            break;
+                        case GState.AWin:
+                            throw new Exception("不对劲");
+                        case GState.BWin:
+                            //倒数第一个胜利
+                            //倒数第二个失败
+                            //倒数第三个胜利
+                            //....
+                            int j = cases.Count - 1 - i;
+                            if (j % 2 == 0)
+                            {
+                                Records.Add(gcase, method, CaseResult.Win);
+                            }
+                            else
+                            {
+                                Records.Add(gcase, method, CaseResult.Fail);
+                            }
+                            break;
+                    }
+                }
             }
         }
     }

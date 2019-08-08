@@ -88,14 +88,15 @@ namespace OnePlusOne
                 {
                     return method;
                 }
-
-
-                while (true)//无法确定时,随机选择
+                else
                 {
-                    int r = random.Next(0, 4);
-                    if (GCase.IsVaildAddMethod(nums, r))
+                    while (true)//无法确定时,随机选择
                     {
-                        return r;
+                        int r = random.Next(0, 4);
+                        if (GCase.IsVaildAddMethod(nums, r))
+                        {
+                            return r;
+                        }
                     }
                 }
             }

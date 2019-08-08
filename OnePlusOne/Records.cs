@@ -8,6 +8,7 @@ namespace OnePlusOne
     public class Records
     {
         public readonly List<Record> rs = new List<Record>();
+        //private Dictionary<GCase, int[]> records = new Dictionary<GCase, int[]>();
         public override string ToString()
         {
             string s = "";

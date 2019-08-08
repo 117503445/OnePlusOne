@@ -206,7 +206,43 @@ namespace OnePlusOne
         private static void Main(string[] args)
 #pragma warning restore IDE0060 // 删除未使用的参数
         {
-            RandomTrainTiming();
+            //RandomTrainTiming();
+            //AIPLayer p = new AIPLayer("randomData.txt");
+            //p.IsEnabledGameLog = false;
+
+            //PlayerTest(p, 10000);
+
+            //return;
+            AIPLayer aiPlayer = new AIPLayer(new Records());
+            aiPlayer.IsEnabledGameLog = false;
+            RandomPlayer randomPlayer = new RandomPlayer();
+            Game game = new Game(new Player[] { randomPlayer, randomPlayer });
+            game.LoadTrainRecords(aiPlayer.Records);
+            game.IsEnabledGameLog = false;
+
+            for (int i = 0; i < 2000; i++)
+            {
+                //Console.WriteLine(i);
+                if (i % 1000 == 0)
+                {
+                    Console.WriteLine(i);
+                }
+                game.Start();
+            }
+            game = new Game(new Player[] { randomPlayer, aiPlayer });
+            game.LoadTrainRecords(aiPlayer.Records);
+            game.IsEnabledGameLog = false;
+            for (int i = 0; i < 1; i++)
+            {
+                //Console.WriteLine(i);
+                if (i % 1000 == 0)
+                {
+                    Console.WriteLine(i);
+                }
+                game.Start();
+            }
+
+            PlayerTest(aiPlayer, 10000);
             return;
             //AITrain();
             AIPLayer aIPLayer = new AIPLayer("randomData.txt");
