@@ -80,7 +80,7 @@ namespace OnePlusOne
         /// </summary>
         /// <param name="path">训练数据路径</param>
         /// <param name="trainNums">训练次数</param>
-        private static void RandomTrain(string path = "randomData.txt", int trainNums = 20000)
+        private static void RandomTrain(string path = "randomData.txt", int trainNums = 1000)
         {
             Records records;
             if (File.Exists(path))
@@ -201,11 +201,21 @@ namespace OnePlusOne
             Game game = new Game(new Player[] { humanPlayer, aIPLayer });
             game.Start();
         }
-
+        private static void Heo()
+        {
+            //RandomTrainTiming();
+            AIPLayer aIPLayer = new AIPLayer("randomData.txt");
+            aIPLayer.IsEnabledGameLog = false;
+            PlayerTest(aIPLayer);
+        }
 #pragma warning disable IDE0060 // 删除未使用的参数
         private static void Main(string[] args)
 #pragma warning restore IDE0060 // 删除未使用的参数
         {
+
+            Heo();
+            return;
+
             //RandomTrainTiming();
             //AIPLayer p = new AIPLayer("randomData.txt");
             //p.IsEnabledGameLog = false;
