@@ -8,6 +8,7 @@ namespace OnePlusOne
         private static void Main(string[] args)
 #pragma warning restore IDE0060 // 删除未使用的参数
         {
+
             try
             {
                 Train.HumanVsAI("randomData.txt");
