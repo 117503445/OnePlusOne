@@ -17,7 +17,7 @@ namespace OnePlusOne
                 Console.WriteLine("LoadTrainData failed");
                 Console.WriteLine("Press Enter to random train");
                 Console.ReadLine();
-                Train.RandomTrainTiming();
+                Train.RandomTrainTiming(10000);
                 Train.HumanVsAI("randomData.txt");
             }
         }

@@ -178,10 +178,10 @@ namespace OnePlusOne
         /// <summary>
         /// 进行 RandomTrain 的同时进行记时
         /// </summary>
-        public static void RandomTrainTiming()
+        public static void RandomTrainTiming(int trainNums)
         {
             var beginTime = DateTime.Now;
-            RandomTrain();
+            RandomTrain(trainNums: trainNums);
             var endTime = DateTime.Now;
             Console.WriteLine();
 
