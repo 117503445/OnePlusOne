@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace OnePlusOne
 {
@@ -10,35 +11,47 @@ namespace OnePlusOne
         /// </summary>
         public static void PlayerTest(Player player, int n = 10000)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             RandomPlayer randomPlayer = new RandomPlayer();
-            Game game = new Game(new Player[] { randomPlayer, player })
-            {
-                IsEnabledGameLog = false
-            };
-            int a = 0, b = 0;
+
+            int a = 0, b = 0, c = 0;
             Console.WriteLine();
             Console.WriteLine("-----");
             Console.WriteLine("Player Testing");
-            Console.CursorVisible = false;
-            for (int i = 0; i < n; i++)
+            object oLock = new object();
+            Parallel.For(0, n, (i) =>
             {
-                Console.SetCursorPosition(0, Console.CursorTop);
-                Console.Write($"{i + 1}/{n}");
+                Game game = new Game(new Player[] { randomPlayer, player })
+                {
+                    IsEnabledGameLog = false
+                };
                 game.Start();
-                if (game.GState == GState.AWin)
+                lock (oLock)
                 {
-                    a++;
+                    switch (game.GState)
+                    {
+                        case GState.Playing:
+                            c++;
+                            break;
+                        case GState.AWin:
+                            a++;
+                            break;
+                        case GState.BWin:
+                            b++;
+                            break;
+                        default:
+                            break;
+                    }
                 }
-                else if (game.GState == GState.BWin)
-                {
-                    b++;
-                }
-            }
-            Console.CursorVisible = true;
 
+            });
             Console.WriteLine();
-            Console.WriteLine($"in {n} times, player win {b} times, randomPlayer win {a} times, {(double)b / (a + b) * 100}%");
+            Console.WriteLine($"in {n} times, player win {b} times, randomPlayer win {a} times, peace {c} times,{(double)b / (a + b) * 100}%");
             Console.WriteLine("-----");
+
+            Console.WriteLine(stopwatch.Elapsed);
+            stopwatch.Stop();
         }
         public static void GodVsHuman()
         {

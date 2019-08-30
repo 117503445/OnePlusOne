@@ -10,6 +10,10 @@ namespace OnePlusOne
     public class Game
     {
         /// <summary>
+        /// 已经进行的步数
+        /// </summary>
+        public int Step { get; private set; } = 0;
+        /// <summary>
         /// 游戏状态
         /// </summary>
         public GState GState
@@ -85,11 +89,11 @@ namespace OnePlusOne
             List<string> cases = new List<string>();
             List<int> methods = new List<int>();
 
-            for (int step = 0; step < maxStep; step++)
+            for (Step = 0; Step < maxStep; Step++)
             {
                 if (GCase.GState != GState.Playing)
                 {
-                    if (step % 2 == 0)
+                    if (Step % 2 == 0)
                     {
                         GState = GState.BWin;
                         GameLog("Player1 Win");
@@ -102,7 +106,7 @@ namespace OnePlusOne
                     break;
                 }
                 int method;
-                if (step % 2 == 0)
+                if (Step % 2 == 0)
                 {
                     GameLog("--- Player0 ---");
                     method = Players[0].GetAddMethod(GCase.Nums);
